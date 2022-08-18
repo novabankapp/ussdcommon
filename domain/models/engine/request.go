@@ -1,6 +1,6 @@
 package engine
 
-type Request struct {
+type Response struct {
 	SessionID        string
 	ResponseRequired bool
 	ScreenID         int
