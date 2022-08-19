@@ -1,11 +1,11 @@
 package adapters
 
 type Request struct {
-	Stage           int
-	SessionID       string
-	USSDString      string
-	PhoneNumber     string
-	ScreenID        int
-	ServiceProvider string
-	Tag             string
+	Stage       int
+	SessionID   string
+	Message     string
+	PhoneNumber string
+	ScreenID    int
+	Network     string
+	Tag         string
 }
