@@ -1,6 +1,7 @@
 package data
 
 import (
+	"context"
 	"encoding/json"
 	"github.com/novabankapp/ussdcommon/domain/models/adapters"
 	"github.com/novabankapp/ussdcommon/stores"
@@ -14,7 +15,7 @@ type DataBag struct {
 	store stores.Store
 }
 
-func newDataBag(store stores.Store, request *adapters.Request) *DataBag {
+func NewDataBag(store stores.Store, request *adapters.Request) *DataBag {
 	name := request.PhoneNumber + "DataBag"
 	return &DataBag{
 		name:  name,
@@ -23,42 +24,40 @@ func newDataBag(store stores.Store, request *adapters.Request) *DataBag {
 }
 
 // Set value in databag
-func (d DataBag) Set(key, value string) error {
-	return d.store.HashSetValue(d.name, key, value)
+func (d DataBag) Set(context context.Context, key, value string) error {
+	return d.store.HashSetValue(context, d.name, key, value)
 }
 
 // Get value from databag
-func (d DataBag) Get(key string) (string, error) {
-	return d.store.HashGetValue(d.name, key)
+func (d DataBag) Get(context context.Context, key string) (string, error) {
+	return d.store.HashGetValue(context, d.name, key)
 }
 
 // Exists verifies if value is in databag
-func (d DataBag) Exists(key string) (bool, error) {
-	return d.store.HashValueExists(d.name, key)
+func (d DataBag) Exists(context context.Context, key string) (bool, error) {
+	return d.store.HashValueExists(context, d.name, key)
 }
 
 // Delete value from databag
-func (d DataBag) Delete(key string) error {
-	return d.store.HashDeleteValue(d.name, key)
+func (d DataBag) Delete(context context.Context, key string) error {
+	return d.store.HashDeleteValue(context, d.name, key)
 }
 
 // Clear databag
-func (d DataBag) Clear() error {
-	return d.store.HashDelete(d.name)
+func (d DataBag) Clear(context context.Context) error {
+	return d.store.HashDelete(context, d.name)
 }
 
-// SetMarshal marshals v into json and puts in databag
-func (d DataBag) SetMarshaled(key string, v interface{}) error {
+func (d DataBag) SetMarshaled(context context.Context, key string, v interface{}) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
 	}
-	return d.Set(key, string(b))
+	return d.Set(context, key, string(b))
 }
 
-// GetUnmarshal retrieves json from databag and unmarshals into v
-func (d DataBag) GetUnmarshaled(key string, v interface{}) error {
-	str, err := d.Get(key)
+func (d DataBag) GetUnmarshaled(context context.Context, key string, v interface{}) error {
+	str, err := d.Get(context, key)
 	if err != nil {
 		return err
 	}
