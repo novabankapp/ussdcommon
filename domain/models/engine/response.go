@@ -1,13 +1,15 @@
 package engine
 
-import "github.com/novabankapp/ussdcommon/utils"
+import (
+	"github.com/novabankapp/ussdcommon/routes"
+)
 
 type Response struct {
-	SessionID        string
-	ResponseRequired bool
-	ScreenID         int
-	Message          string
-	Route            utils.Route
-	Redirect         bool
-	Err              error
+	SessionID          string
+	NoResponseRequired bool
+	ScreenID           int
+	Message            string
+	Route              routes.Route
+	Redirect           bool
+	Err                error
 }

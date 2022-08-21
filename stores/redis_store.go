@@ -2,7 +2,9 @@ package stores
 
 import (
 	"context"
+	"fmt"
 	"github.com/go-redis/redis/v8"
+	rd "github.com/novabankapp/common.infrastructure/redis"
 )
 
 type redisStore struct {
@@ -14,7 +16,7 @@ func (r redisStore) Connect(context context.Context) error {
 }
 
 func (r redisStore) SetValue(context context.Context, key, value string) error {
-	return r.client.Set(context, key, value, 300).Err()
+	return r.client.Set(context, key, value, 0).Err()
 
 }
 
@@ -23,11 +25,11 @@ func (r redisStore) GetValue(context context.Context, key string) (string, error
 }
 
 func (r redisStore) ValueExists(context context.Context, key string) (bool, error) {
-	err := r.client.Exists(context, key).Err()
+	res, err := r.client.Exists(context, key).Result()
 	if err != nil {
 		return false, err
 	}
-	return true, nil
+	return res != 0, nil
 
 }
 
@@ -63,7 +65,15 @@ func (r redisStore) Close(context context.Context) error {
 	return r.client.Close()
 }
 
-func NewRedisStore(client redis.UniversalClient) Store {
+func NewRedisStore(db int, address, password string) Store {
+	redisConfig := rd.Config{
+		Addr:     address,
+		Password: password,
+		DB:       db,
+	}
+	fmt.Println(redisConfig)
+	client := rd.NewUniversalRedisClient(&redisConfig)
+	fmt.Println(client)
 	return &redisStore{
 		client: client,
 	}

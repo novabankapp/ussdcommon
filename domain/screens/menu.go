@@ -2,6 +2,7 @@ package screens
 
 import (
 	"fmt"
+	"github.com/novabankapp/ussdcommon/routes"
 	"github.com/novabankapp/ussdcommon/utils"
 )
 
@@ -14,7 +15,7 @@ type Menu struct {
 
 type menuItem struct {
 	Name  string
-	Route utils.Route
+	Route routes.Route
 }
 
 // NewMenu creates a new Menu
@@ -27,7 +28,7 @@ func NewMenu() *Menu {
 // Add to USSD menu.
 func (m *Menu) Add(name, ctrl, action string) *Menu {
 	item := &menuItem{Name: name,
-		Route: utils.Route{Ctrl: ctrl, Action: action},
+		Route: routes.Route{Ctrl: ctrl, Action: action},
 	}
 	m.Items = append(m.Items, item)
 	return m
@@ -38,7 +39,7 @@ func (m *Menu) Add(name, ctrl, action string) *Menu {
 func (m *Menu) AddZero(name, ctrl, action string) *Menu {
 	m.ZeroItem = &menuItem{
 		Name:  name,
-		Route: utils.Route{Ctrl: ctrl, Action: action},
+		Route: routes.Route{Ctrl: ctrl, Action: action},
 	}
 	return m
 }
